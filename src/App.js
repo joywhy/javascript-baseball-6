@@ -7,7 +7,7 @@ const score = Object.seal({
 });
 const MESSAGE = Object.freeze({
   START: '숫자 야구 게임을 시작합니다.',
-  INPUTREQUEST: '숫자를 입력해주세요 :',
+  INPUT_REQUEST: '숫자를 입력해주세요 :',
   RESTART: '게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.\n',
   ERROR: '[ERROR] 숫자가 잘못된 형식입니다.',
   BALL: '볼',
@@ -15,15 +15,16 @@ const MESSAGE = Object.freeze({
   NOTHING: '낫싱',
   SUCCESS: '3스트라이크\n3개의 숫자를 모두 맞히셨습니다! 게임 종료',
 });
-const NUMBERCOUNT = 3; //맞추는 숫자갯수
+const NUMBER_COUNT = 3; //맞추는 숫자갯수
 const RESTART = '1';
 // const END = "2";
 
 async function makeRandom() {
   const answer = [];
-  while (answer.length < NUMBERCOUNT) {
+  while (answer.length < NUMBER_COUNT) {
     const number = Random.pickNumberInRange(1, 9);
     if (!answer.includes(number + '')) {
+      //Set 자료구조 add
       answer.push(number + '');
     }
   }
@@ -41,15 +42,17 @@ async function getUserInput(message) {
 }
 
 function isInputValid(number) {
+  //number 변수명 지양 타입중 number 라는 게 있어서
   for (let i = 0; i < number.length; i++) {
     //지수형태의 숫자열을 막기위해 한글자씩 비교
     if (isNaN(number[i])) {
+      //다른 메서드로
       return false;
     }
   }
   if (
-    new Set([...number]).size !== NUMBERCOUNT ||
-    number.length !== NUMBERCOUNT
+    new Set([...number]).size !== NUMBER_COUNT ||
+    number.length !== NUMBER_COUNT
   ) {
     return false;
   }
@@ -91,7 +94,7 @@ function printResult() {
     Console.print(MESSAGE.NOTHING);
     return;
   }
-  if (score.strike === NUMBERCOUNT) {
+  if (score.strike === NUMBER_COUNT) {
     Console.print(MESSAGE.SUCCESS);
     score.success = true;
     return;
@@ -101,9 +104,7 @@ function printResult() {
     Console.print(text);
     return;
   }
-  let text = score.ball
-    ? score.ball + MESSAGE.BALL
-    : score.strike + MESSAGE.STRIKE;
+  let text = score.ball ? `${score.ball}볼` : `${score.ball}스트라이크`; //에어비엔비 컨벤션 연결대신 템플릿 문자열
   Console.print(text);
   return;
 }
@@ -111,12 +112,12 @@ function printResult() {
 class App {
   async play() {
     // RESTART = "1";
-
+    //하나의 함수에서 너무 많은 일을 한다.
     Console.print(MESSAGE.START);
     const ANSWER = await makeRandom();
 
     while (!score.success) {
-      let num = await getUserInput(MESSAGE.INPUTREQUEST);
+      let num = await getUserInput(MESSAGE.INPUT_REQUEST);
       if (!isInputValid(num)) {
         throw new Error(MESSAGE.ERROR);
       }
