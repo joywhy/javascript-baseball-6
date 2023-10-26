@@ -6,14 +6,14 @@ const score = Object.seal({
   success: false, // 여기있는게 맞나?
 });
 const MESSAGE = Object.freeze({
-  START: '숫자 야구 게임을 시작합니다.',
-  INPUT_REQUEST: '숫자를 입력해주세요 :',
-  RESTART: '게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.\n',
-  ERROR: '[ERROR] 숫자가 잘못된 형식입니다.',
-  BALL: '볼',
-  STRIKE: '스트라이크',
-  NOTHING: '낫싱',
-  SUCCESS: '3스트라이크\n3개의 숫자를 모두 맞히셨습니다! 게임 종료',
+  start: '숫자 야구 게임을 시작합니다.',
+  inputRequest: '숫자를 입력해주세요 :',
+  restart: '게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.\n',
+  error: '[ERROR] 숫자가 잘못된 형식입니다.',
+  ball: '볼',
+  strike: '스트라이크',
+  nothing: '낫싱',
+  success: '3스트라이크\n3개의 숫자를 모두 맞히셨습니다! 게임 종료',
 });
 const NUMBER_COUNT = 3; //맞추는 숫자갯수
 const RESTART = '1';
@@ -37,7 +37,7 @@ async function getUserInput(message) {
     const number = await Console.readLineAsync(message);
     return number;
   } catch (error) {
-    throw new Error(MESSAGE.ERROR);
+    throw new Error(MESSAGE.error);
   }
 }
 
@@ -62,7 +62,6 @@ function isInputValid(number) {
 function isRestartValid(number) {
   //해당 상수를 isRestartValid 와 App 함수에 각각 넣어 작성하면 단일 출처 원칙을 반하지 않나.
   // 전역 변수를 최대한 자제하는 것이 좋은 데 더 나은 방법이 무엇인지 궁금합니다.
-  // const RESTART = "1";
   const END = '2';
   if (number === RESTART || number === END) {
     return true;
@@ -91,35 +90,36 @@ function resetScore() {
 function printResult() {
   //switch 문, if문, if-else 문 어느것이 더 적절했나
   if (score.ball === 0 && score.strike === 0) {
-    Console.print(MESSAGE.NOTHING);
+    Console.print(MESSAGE.nothing);
     return;
   }
   if (score.strike === NUMBER_COUNT) {
-    Console.print(MESSAGE.SUCCESS);
+    Console.print(MESSAGE.success);
     score.success = true;
     return;
   }
   if (score.ball && score.strike) {
-    let text = `${score.ball}${MESSAGE.BALL} ${score.strike}${MESSAGE.STRIKE}`;
+    let text = `${score.ball}볼 ${score.strike}스트라이크`;
     Console.print(text);
     return;
   }
+  //const 로
   let text = score.ball ? `${score.ball}볼` : `${score.ball}스트라이크`; //에어비엔비 컨벤션 연결대신 템플릿 문자열
   Console.print(text);
-  return;
+  return; //불필요
 }
 
 class App {
   async play() {
     // RESTART = "1";
     //하나의 함수에서 너무 많은 일을 한다.
-    Console.print(MESSAGE.START);
+    Console.print(MESSAGE.start);
     const ANSWER = await makeRandom();
 
     while (!score.success) {
-      let num = await getUserInput(MESSAGE.INPUT_REQUEST);
+      let num = await getUserInput(MESSAGE.inputRequest);
       if (!isInputValid(num)) {
-        throw new Error(MESSAGE.ERROR);
+        throw new Error(MESSAGE.error);
       }
 
       calculateScore(ANSWER, num);
@@ -129,9 +129,9 @@ class App {
       }
     }
 
-    let number = await getUserInput(MESSAGE.RESTART);
+    let number = await getUserInput(MESSAGE.restart);
     if (!isRestartValid(number)) {
-      throw new Error(MESSAGE.ERROR);
+      throw new Error(MESSAGE.error);
     }
 
     if (number === RESTART) {
