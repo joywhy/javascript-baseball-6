@@ -1,31 +1,30 @@
-import { Console, Random } from "@woowacourse/mission-utils";
+import { Console, Random } from '@woowacourse/mission-utils';
 
 const score = Object.seal({
-  //상수가 아니니 score 변수는 대문자로 쓰면 안되지 않나? SCORE
-  ball: 0, //상수가 아니니 대문자로 쓰는게 아니지 않나?
+  ball: 0,
   strike: 0,
-  success: false,
+  success: false, // 여기있는게 맞나?
 });
 const MESSAGE = Object.freeze({
-  START: "숫자 야구 게임을 시작합니다.", //속성 네이밍도 대문자로 해야하나?
-  INPUTREQUEST: "숫자를 입력해주세요 :",
-  RESTART: "게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.\n",
-  ERROR: "[ERROR] 숫자가 잘못된 형식입니다.",
-  BALL: "볼",
-  STRIKE: "스트라이크",
-  NOTHING: "낫싱",
-  SUCCESS: "3스트라이크\n3개의 숫자를 모두 맞히셨습니다! 게임 종료",
+  START: '숫자 야구 게임을 시작합니다.',
+  INPUTREQUEST: '숫자를 입력해주세요 :',
+  RESTART: '게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.\n',
+  ERROR: '[ERROR] 숫자가 잘못된 형식입니다.',
+  BALL: '볼',
+  STRIKE: '스트라이크',
+  NOTHING: '낫싱',
+  SUCCESS: '3스트라이크\n3개의 숫자를 모두 맞히셨습니다! 게임 종료',
 });
 const NUMBERCOUNT = 3; //맞추는 숫자갯수
-const RESTART = "1";
+const RESTART = '1';
 // const END = "2";
 
 async function makeRandom() {
   const answer = [];
   while (answer.length < NUMBERCOUNT) {
     const number = Random.pickNumberInRange(1, 9);
-    if (!answer.includes(number + "")) {
-      answer.push(number + "");
+    if (!answer.includes(number + '')) {
+      answer.push(number + '');
     }
   }
   //console.log(answer);
@@ -61,7 +60,7 @@ function isRestartValid(number) {
   //해당 상수를 isRestartValid 와 App 함수에 각각 넣어 작성하면 단일 출처 원칙을 반하지 않나.
   // 전역 변수를 최대한 자제하는 것이 좋은 데 더 나은 방법이 무엇인지 궁금합니다.
   // const RESTART = "1";
-  const END = "2";
+  const END = '2';
   if (number === RESTART || number === END) {
     return true;
   }
